@@ -25,7 +25,6 @@ public class _MappingKit {
 		arp.addMapping("guest", "id", Guest.class);
 		arp.addMapping("invotory", "id", Invotory.class);
 		arp.addMapping("material_type", "id", MaterialType.class);
-		arp.addMapping("order", "id", Order.class);
 		arp.addMapping("order_item", "id", OrderItem.class);
 		arp.addMapping("order_print", "id", OrderPrint.class);
 		arp.addMapping("storage_type", "id", StorageType.class);
@@ -33,6 +32,7 @@ public class _MappingKit {
 		arp.addMapping("vip_member", "mobile", VipMember.class);
 		arp.addMapping("vip_member_type", "id", VipMemberType.class);
 		arp.addMapping("weixin_order", "id", WeixinOrder.class);
+		arp.addMapping("order", "id", Order.class);
 	}
 }
 

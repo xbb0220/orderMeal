@@ -153,4 +153,13 @@ public abstract class BaseOrder<M extends BaseOrder<M>> extends Model<M> impleme
 		return get("timeEnd");
 	}
 
+	public M setFinalTotalFee(java.lang.Integer finalTotalFee) {
+		set("finalTotalFee", finalTotalFee);
+		return (M)this;
+	}
+	
+	public java.lang.Integer getFinalTotalFee() {
+		return getInt("finalTotalFee");
+	}
+
 }

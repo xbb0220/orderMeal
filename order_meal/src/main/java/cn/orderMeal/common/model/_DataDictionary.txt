@@ -110,28 +110,6 @@ Table: material_type
  deleteFlag  | BIT          | YES  |     |         | 删除标志    
 -------------+--------------+------+-----+---------+---------
 
-Table: order
----------------+--------------+------+-----+---------+---------
- Field         | Type         | Null | Key | Default | Remarks 
----------------+--------------+------+-----+---------+---------
- id            | VARCHAR(36)  | NO   | PRI |         | 订单id    
- diningTableId | VARCHAR(36)  | YES  |     |         | 台桌id    
- deleteFlag    | VARCHAR(36)  | YES  |     |         | 删除标记    
- createTime    | DATETIME(19) | YES  |     |         | 创建时间    
- updateTime    | DATETIME(19) | YES  |     |         | 更新时间    
- status        | VARCHAR(20)  | YES  |     |         | 0：未结算；1：已结算
- remark        | TEXT(65535)  | YES  |     |         | 备注      
- guestId       | VARCHAR(36)  | YES  |     |         | 客人id    
- diningTabeNum | VARCHAR(45)  | YES  |     |         | 桌号      
- outTradeNo    | VARCHAR(45)  | YES  |     |         | 订单号     
- totalFee      | INT(10)      | YES  |     |         | 订单总金额，单位：分
- timeStart     | DATETIME(19) | YES  |     |         | 微信下单开始时间
- timeExpire    | DATETIME(19) | YES  |     |         | 微信订单失效时间
- openId        | VARCHAR(40)  | YES  |     |         | 微信用户openId
- transId       | VARCHAR(50)  | YES  |     |         | 微信支付订单号 
- timeEnd       | DATETIME(19) | YES  |     |         | 微信支付完成时间
----------------+--------------+------+-----+---------+---------
-
 Table: order_item
 ------------+---------------+------+-----+---------+---------
  Field      | Type          | Null | Key | Default | Remarks 
@@ -239,4 +217,27 @@ Table: weixin_order
  time_end             | VARCHAR(100) | YES  |     |         | 支付完成时间  
  orderId              | VARCHAR(36)  | YES  |     |         | 订单号     
 ----------------------+--------------+------+-----+---------+---------
+
+Table: order
+---------------+--------------+------+-----+---------+---------
+ Field         | Type         | Null | Key | Default | Remarks 
+---------------+--------------+------+-----+---------+---------
+ id            | VARCHAR(36)  | NO   | PRI |         | 订单id    
+ diningTableId | VARCHAR(36)  | YES  |     |         | 台桌id    
+ deleteFlag    | VARCHAR(36)  | YES  |     |         | 删除标记    
+ createTime    | DATETIME(19) | YES  |     |         | 创建时间    
+ updateTime    | DATETIME(19) | YES  |     |         | 更新时间    
+ status        | VARCHAR(20)  | YES  |     |         | 0：未结算；1：已结算
+ remark        | TEXT(65535)  | YES  |     |         | 备注      
+ guestId       | VARCHAR(36)  | YES  |     |         | 客人id    
+ diningTabeNum | VARCHAR(45)  | YES  |     |         | 桌号      
+ outTradeNo    | VARCHAR(45)  | YES  |     |         | 订单号     
+ totalFee      | INT(10)      | YES  |     |         | 订单总金额，单位：分
+ timeStart     | DATETIME(19) | YES  |     |         | 微信下单开始时间
+ timeExpire    | DATETIME(19) | YES  |     |         | 微信订单失效时间
+ openId        | VARCHAR(40)  | YES  |     |         | 微信用户openId
+ transId       | VARCHAR(50)  | YES  |     |         | 微信支付订单号 
+ timeEnd       | DATETIME(19) | YES  |     |         | 微信支付完成时间
+ finalTotalFee | INT(10)      | YES  |     |         | 最终结账时到账的总金额
+---------------+--------------+------+-----+---------+---------
 
