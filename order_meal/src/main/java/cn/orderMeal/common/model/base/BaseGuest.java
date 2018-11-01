@@ -27,13 +27,13 @@ public abstract class BaseGuest<M extends BaseGuest<M>> extends Model<M> impleme
 		return getStr("name");
 	}
 
-	public M setMobile(java.lang.Integer mobile) {
+	public M setMobile(java.lang.String mobile) {
 		set("mobile", mobile);
 		return (M)this;
 	}
 	
-	public java.lang.Integer getMobile() {
-		return getInt("mobile");
+	public java.lang.String getMobile() {
+		return getStr("mobile");
 	}
 
 	public M setAddress(java.lang.String address) {

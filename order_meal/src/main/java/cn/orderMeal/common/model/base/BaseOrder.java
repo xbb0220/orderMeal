@@ -91,12 +91,66 @@ public abstract class BaseOrder<M extends BaseOrder<M>> extends Model<M> impleme
 	}
 
 	public M setOutTradeNo(java.lang.String outTradeNo) {
-		set("out_trade_no", outTradeNo);
+		set("outTradeNo", outTradeNo);
 		return (M)this;
 	}
 	
 	public java.lang.String getOutTradeNo() {
-		return getStr("out_trade_no");
+		return getStr("outTradeNo");
+	}
+
+	public M setTotalFee(java.lang.Integer totalFee) {
+		set("totalFee", totalFee);
+		return (M)this;
+	}
+	
+	public java.lang.Integer getTotalFee() {
+		return getInt("totalFee");
+	}
+
+	public M setTimeStart(java.util.Date timeStart) {
+		set("timeStart", timeStart);
+		return (M)this;
+	}
+	
+	public java.util.Date getTimeStart() {
+		return get("timeStart");
+	}
+
+	public M setTimeExpire(java.util.Date timeExpire) {
+		set("timeExpire", timeExpire);
+		return (M)this;
+	}
+	
+	public java.util.Date getTimeExpire() {
+		return get("timeExpire");
+	}
+
+	public M setOpenId(java.lang.String openId) {
+		set("openId", openId);
+		return (M)this;
+	}
+	
+	public java.lang.String getOpenId() {
+		return getStr("openId");
+	}
+
+	public M setTransId(java.lang.String transId) {
+		set("transId", transId);
+		return (M)this;
+	}
+	
+	public java.lang.String getTransId() {
+		return getStr("transId");
+	}
+
+	public M setTimeEnd(java.util.Date timeEnd) {
+		set("timeEnd", timeEnd);
+		return (M)this;
+	}
+	
+	public java.util.Date getTimeEnd() {
+		return get("timeEnd");
 	}
 
 }

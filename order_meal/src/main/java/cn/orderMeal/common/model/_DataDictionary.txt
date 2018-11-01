@@ -29,6 +29,18 @@ Table: dict_type
  updateTime | DATETIME(19) | YES  |     |         | 更新时间    
 ------------+--------------+------+-----+---------+---------
 
+Table: dinning_table
+---------------+-------------+------+-----+---------+---------
+ Field         | Type        | Null | Key | Default | Remarks 
+---------------+-------------+------+-----+---------+---------
+ id            | VARCHAR(36) | NO   | PRI |         | 餐桌ID    
+ acommondate   | VARCHAR(45) | YES  |     |         | 容纳人数    
+ status        | VARCHAR(36) | YES  |     |         | 0：空闲；1：可用；2：有合并子桌
+ deleteFlag    | VARCHAR(36) | YES  |     |         | 删除标记    
+ description   | TEXT(65535) | YES  |     |         | 台桌描述    
+ diningTabeNum | VARCHAR(45) | YES  |     |         |         
+---------------+-------------+------+-----+---------+---------
+
 Table: dish
 -------------+---------------+------+-----+---------+---------
  Field       | Type          | Null | Key | Default | Remarks 
@@ -72,15 +84,31 @@ Table: guest
  profilePic     | TEXT(65535)   | YES  |     |         |         
 ----------------+---------------+------+-----+---------+---------
 
-Table: order_print
+Table: invotory
 ----------------+--------------+------+-----+---------+---------
  Field          | Type         | Null | Key | Default | Remarks 
 ----------------+--------------+------+-----+---------+---------
- id             | VARCHAR(36)  | NO   | PRI |         | 订单打印id  
- orderPrintType | VARCHAR(36)  | YES  |     |         | 打印类型id  
- orderId        | VARCHAR(36)  | YES  |     |         | 订单id    
- createTime     | DATETIME(19) | YES  |     |         | 创建时间    
+ id             | VARCHAR(36)  | NO   | PRI |         | 库存id    
+ name           | VARCHAR(45)  | YES  |     |         | 物品名称    
+ amount         | INT(10)      | YES  |     |         | 数量      
+ storageTypeId  | VARCHAR(36)  | YES  |     |         | 库存单位    
+ ceateDate      | DATETIME(19) | YES  |     |         | 创建时间    
+ updateDate     | DATETIME(19) | YES  |     |         | 更新时间    
+ deleteFlag     | BIT          | YES  |     |         | 删除标记    
+ materialTypeId | VARCHAR(36)  | YES  |     |         | 原材料类型id 
 ----------------+--------------+------+-----+---------+---------
+
+Table: material_type
+-------------+--------------+------+-----+---------+---------
+ Field       | Type         | Null | Key | Default | Remarks 
+-------------+--------------+------+-----+---------+---------
+ id          | VARCHAR(32)  | NO   | PRI |         | 原材料类型id 
+ name        | VARCHAR(45)  | YES  |     |         | 原材料类型名称 
+ description | TEXT(65535)  | YES  |     |         | 原材料类型介绍 
+ createDate  | DATETIME(19) | YES  |     |         | 创建时间    
+ updateDate  | DATETIME(19) | YES  |     |         | 更新时间    
+ deleteFlag  | BIT          | YES  |     |         | 删除标志    
+-------------+--------------+------+-----+---------+---------
 
 Table: order
 ---------------+--------------+------+-----+---------+---------
@@ -95,6 +123,13 @@ Table: order
  remark        | TEXT(65535)  | YES  |     |         | 备注      
  guestId       | VARCHAR(36)  | YES  |     |         | 客人id    
  diningTabeNum | VARCHAR(45)  | YES  |     |         | 桌号      
+ outTradeNo    | VARCHAR(45)  | YES  |     |         | 订单号     
+ totalFee      | INT(10)      | YES  |     |         | 订单总金额，单位：分
+ timeStart     | DATETIME(19) | YES  |     |         | 微信下单开始时间
+ timeExpire    | DATETIME(19) | YES  |     |         | 微信订单失效时间
+ openId        | VARCHAR(40)  | YES  |     |         | 微信用户openId
+ transId       | VARCHAR(50)  | YES  |     |         | 微信支付订单号 
+ timeEnd       | DATETIME(19) | YES  |     |         | 微信支付完成时间
 ---------------+--------------+------+-----+---------+---------
 
 Table: order_item
@@ -113,15 +148,95 @@ Table: order_item
  picUrl     | TEXT(65535)   | YES  |     |         | 菜品图片    
 ------------+---------------+------+-----+---------+---------
 
-Table: dinning_table
----------------+-------------+------+-----+---------+---------
- Field         | Type        | Null | Key | Default | Remarks 
----------------+-------------+------+-----+---------+---------
- id            | VARCHAR(36) | NO   | PRI |         | 餐桌ID    
- acommondate   | VARCHAR(45) | YES  |     |         | 容纳人数    
- status        | VARCHAR(36) | YES  |     |         | 0：空闲；1：可用；2：有合并子桌
- deleteFlag    | VARCHAR(36) | YES  |     |         | 删除标记    
- description   | TEXT(65535) | YES  |     |         | 台桌描述    
- diningTabeNum | VARCHAR(45) | YES  |     |         |         
----------------+-------------+------+-----+---------+---------
+Table: order_print
+----------------+--------------+------+-----+---------+---------
+ Field          | Type         | Null | Key | Default | Remarks 
+----------------+--------------+------+-----+---------+---------
+ id             | VARCHAR(36)  | NO   | PRI |         | 订单打印id  
+ orderPrintType | VARCHAR(36)  | YES  |     |         | 打印类型id  
+ orderId        | VARCHAR(36)  | YES  |     |         | 订单id    
+ createTime     | DATETIME(19) | YES  |     |         | 创建时间    
+----------------+--------------+------+-----+---------+---------
+
+Table: storage_type
+------------+--------------+------+-----+---------+---------
+ Field      | Type         | Null | Key | Default | Remarks 
+------------+--------------+------+-----+---------+---------
+ id         | VARCHAR(36)  | NO   | PRI |         | 库存计量单位id
+ name       | VARCHAR(45)  | YES  |     |         | 单位名称    
+ createDate | DATETIME(19) | YES  |     |         | 创建时间    
+ deleteFlag | BIT          | YES  |     |         | 删除标记    
+------------+--------------+------+-----+---------+---------
+
+Table: user
+------------+--------------+------+-----+---------+---------
+ Field      | Type         | Null | Key | Default | Remarks 
+------------+--------------+------+-----+---------+---------
+ id         | VARCHAR(36)  | NO   | PRI |         |         
+ name       | VARCHAR(45)  | YES  |     |         |         
+ pwd        | VARCHAR(64)  | YES  |     |         |         
+ createDate | DATETIME(19) | YES  |     |         |         
+ updateDate | DATETIME(19) | YES  |     |         |         
+ deleteflag | BIT          | YES  |     |         |         
+------------+--------------+------+-----+---------+---------
+
+Table: vip_member
+-----------------+--------------+------+-----+---------+---------
+ Field           | Type         | Null | Key | Default | Remarks 
+-----------------+--------------+------+-----+---------+---------
+ mobile          | INT(10)      | NO   | PRI |         | 手机      
+ name            | VARCHAR(45)  | YES  |     |         | 姓名      
+ address         | TEXT(65535)  | YES  |     |         | 地址      
+ deleteFlag      | BIT          | YES  |     |         | 删除标记    
+ createDate      | DATETIME(19) | YES  |     |         | 创建时间    
+ coins           | INT(10)      | YES  |     |         | 积分      
+ vipMemberTypeId | VARCHAR(36)  | YES  |     |         | 会员类型id  
+-----------------+--------------+------+-----+---------+---------
+
+Table: vip_member_type
+-------------+--------------+------+-----+---------+---------
+ Field       | Type         | Null | Key | Default | Remarks 
+-------------+--------------+------+-----+---------+---------
+ id          | VARCHAR(36)  | NO   | PRI |         | vip类型ID 
+ description | TEXT(65535)  | YES  |     |         | 描述      
+ name        | VARCHAR(45)  | YES  |     |         | 名称      
+ createDate  | DATETIME(19) | YES  |     |         | 创建时间    
+ updateDate  | DATETIME(19) | YES  |     |         | 更新时间    
+ deleteFlag  | BIT          | YES  |     |         | 删除标记    
+-------------+--------------+------+-----+---------+---------
+
+Table: weixin_order
+----------------------+--------------+------+-----+---------+---------
+ Field                | Type         | Null | Key | Default | Remarks 
+----------------------+--------------+------+-----+---------+---------
+ id                   | VARCHAR(36)  | NO   | PRI |         | 主键      
+ appid                | VARCHAR(45)  | YES  |     |         | 公众账号ID  
+ mch_id               | VARCHAR(100) | YES  |     |         | 商户号     
+ device_info          | VARCHAR(45)  | YES  |     |         | 设备号     
+ nonce_str            | VARCHAR(45)  | YES  |     |         | 随机字符串   
+ sign                 | VARCHAR(45)  | YES  |     |         | 签名      
+ sign_type            | VARCHAR(45)  | YES  |     |         | 签名类型    
+ result_code          | VARCHAR(45)  | YES  |     |         | 业务结果SUCCESS/FAIL
+ err_code             | VARCHAR(45)  | YES  |     |         | 错误代码    
+ err_code_des         | VARCHAR(45)  | YES  |     |         | 错误代码描述  
+ openid               | VARCHAR(45)  | YES  |     |         | 用户标识    
+ is_subscribe         | VARCHAR(45)  | YES  |     |         | 是否关注公众账号
+ trade_type           | VARCHAR(45)  | YES  |     |         | 交易类型    
+ bank_type            | VARCHAR(45)  | YES  |     |         | 付款银行    
+ total_fee            | INT(10)      | YES  |     |         | 订单金额    
+ settlement_total_fee | INT(10)      | YES  |     |         | 应结订单金额  
+ fee_type             | VARCHAR(36)  | YES  |     |         | 货币种类    
+ cash_fee             | INT(10)      | YES  |     |         | 现金支付金额  
+ cash_fee_type        | VARCHAR(45)  | YES  |     |         | 现金支付货币类型
+ coupon_fee           | INT(10)      | YES  |     |         | 总代金券金额  
+ coupon_count         | INT(10)      | YES  |     |         | 代金券使用数量 
+ coupon_type_$n       | VARCHAR(45)  | YES  |     |         | 代金券类型   
+ coupon_id_$n         | VARCHAR(45)  | YES  |     |         | 代金券ID   
+ coupon_fee_$n        | INT(10)      | YES  |     |         | 单个代金券支付金额
+ transaction_id       | VARCHAR(45)  | YES  |     |         | 微信支付订单号 
+ out_trade_no         | VARCHAR(45)  | YES  |     |         | 商户订单号   
+ attach               | VARCHAR(200) | YES  |     |         | 商家数据包   
+ time_end             | VARCHAR(100) | YES  |     |         | 支付完成时间  
+ orderId              | VARCHAR(36)  | YES  |     |         | 订单号     
+----------------------+--------------+------+-----+---------+---------
 
