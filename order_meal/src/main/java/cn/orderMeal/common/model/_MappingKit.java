@@ -16,15 +16,23 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 public class _MappingKit {
 	
 	public static void mapping(ActiveRecordPlugin arp) {
+		arp.addMapping("department", "id", Department.class);
 		arp.addMapping("dict", "id", Dict.class);
 		arp.addMapping("dict_type", "id", DictType.class);
+		arp.addMapping("dinning_table", "id", DinningTable.class);
 		arp.addMapping("dish", "id", Dish.class);
 		arp.addMapping("dish_type", "id", DishType.class);
 		arp.addMapping("guest", "id", Guest.class);
-		arp.addMapping("order_print", "id", OrderPrint.class);
+		arp.addMapping("invotory", "id", Invotory.class);
+		arp.addMapping("material_type", "id", MaterialType.class);
 		arp.addMapping("order", "id", Order.class);
 		arp.addMapping("order_item", "id", OrderItem.class);
-		arp.addMapping("dinning_table", "id", DinningTable.class);
+		arp.addMapping("order_print", "id", OrderPrint.class);
+		arp.addMapping("storage_type", "id", StorageType.class);
+		arp.addMapping("user", "id", User.class);
+		arp.addMapping("vip_member", "mobile", VipMember.class);
+		arp.addMapping("vip_member_type", "id", VipMemberType.class);
+		arp.addMapping("weixin_order", "id", WeixinOrder.class);
 	}
 }
 
