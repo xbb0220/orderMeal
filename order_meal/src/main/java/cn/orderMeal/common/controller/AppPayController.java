@@ -73,6 +73,7 @@ public class AppPayController extends BaseController {
 				dbOrder.setTimeEnd(DateKit.stringToDate(timeEnd, "yyyyMMddHHmmss"));
 				dbOrder.setStatus(OrderStatus.FINISH.getCode());
 				dbOrder.setTransId(transId);
+				dbOrder.setFinalTotalFee(Integer.valueOf(totalFee));
 				orderService.update(dbOrder);
 				Map<String, String> xml = new HashMap<String, String>();
 				xml.put("return_code", "SUCCESS");
