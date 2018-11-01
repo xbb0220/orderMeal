@@ -9,15 +9,21 @@ import com.jfinal.config.Routes;
 import com.jfinal.core.JFinal;
 import com.jfinal.kit.PropKit;
 import com.jfinal.template.Engine;
+import com.jfinal.template.source.ClassPathSourceFactory;
 import com.jfinal.weixin.sdk.api.ApiConfig;
 import com.jfinal.weixin.sdk.api.ApiConfigKit;
+import com.jfinal.wxaapp.WxaConfig;
+import com.jfinal.wxaapp.WxaConfigKit;
 
-import cn.orderMeal.common.controller.DepartmentController;
-import cn.orderMeal.common.controller.UserController;
+import cn.orderMeal.common.controller.DishController;
+import cn.orderMeal.common.controller.DishTypeController;
+import cn.orderMeal.common.controller.GuestController;
+import cn.orderMeal.common.controller.MessageController;
+import cn.orderMeal.common.controller.OrderController;
+import cn.orderMeal.common.controller.OrderItemController;
 import cn.orderMeal.common.kit.session.SessionHandler;
 import cn.orderMeal.common.model._MappingKit;
 import redis.clients.jedis.JedisPoolConfig;
-
 import com.jfinal.ext.interceptor.SessionInViewInterceptor;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.redis.RedisPlugin;
@@ -51,8 +57,12 @@ public class MainConfig extends JFinalConfig {
 	 */
 	@Override
 	public void configRoute(Routes me) {
-		me.add("department", DepartmentController.class);
-		me.add("/user", UserController.class);
+		me.add("/guest", GuestController.class);
+		me.add("/dishType", DishTypeController.class);
+		me.add("/dish", DishController.class);
+		me.add("/order", OrderController.class);
+		me.add("/message", MessageController.class);
+		me.add("/orderItem", OrderItemController.class);
 	}
 	/**
 	 * 配置JFinal插件
@@ -67,6 +77,8 @@ public class MainConfig extends JFinalConfig {
 		DruidPlugin dbPlugin=new DruidPlugin(PropKit.get("jdbcUrl"), PropKit.get("user"), PropKit.get("password"));
 		//orm映射 配置ActiveRecord插件
 		ActiveRecordPlugin arp=new ActiveRecordPlugin(dbPlugin);
+		arp.getEngine().setSourceFactory(new ClassPathSourceFactory());
+		arp.addSqlTemplate("/sql/all.sql");
 		arp.setShowSql(PropKit.getBoolean("devMode"));
 		arp.setDialect(new MysqlDialect());
 		dbPlugin.setDriverClass("com.mysql.jdbc.Driver");
@@ -129,6 +141,15 @@ public class MainConfig extends JFinalConfig {
        * 多个公众号时，重复调用ApiConfigKit.putApiConfig(ac)依次添加即可，第一个添加的是默认。
        */
       ApiConfigKit.putApiConfig(ac);
+      
+      WxaConfig wxaConfig = new WxaConfig();
+      wxaConfig.setAppId(PropKit.get("appId"));
+      wxaConfig.setAppSecret(PropKit.get("appSecret"));
+      wxaConfig.setEncodingAesKey(PropKit.get("encodingAesKey", "setting it in config file"));
+      wxaConfig.setMessageEncrypt(PropKit.getBoolean("encryptMessage", false));
+      wxaConfig.setToken(PropKit.get("token"));
+      WxaConfigKit.setDevMode(PropKit.getBoolean("devMode"));
+      WxaConfigKit.setWxaConfig(wxaConfig);
 	}
 	/**
 	 * JFinal Stop之前调用 
@@ -149,7 +170,7 @@ public class MainConfig extends JFinalConfig {
 	}
 	
 	public static void main(String[] args) {
-		JFinal.start("src/main/webapp", 80, "/", 5);
+		JFinal.start("src/main/webapp", 8081, "/");
 	}
 	
 
