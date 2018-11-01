@@ -51,6 +51,7 @@ public class OrderController extends BaseController{
 		renderJson(ov);
 	}
 	
+	
 	private void setDinningTableInfo(OrderVo orderVo, Order order) {
 		DinningTable dinningTable = dinningTableService.findById(orderVo.getDiningTableId());
 		if (null != dinningTable){
