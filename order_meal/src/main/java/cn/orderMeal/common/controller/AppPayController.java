@@ -1,6 +1,7 @@
 package cn.orderMeal.common.controller;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,13 +23,18 @@ import cn.orderMeal.common.service.impl.OrderServiceImpl;
 
 public class AppPayController extends BaseController {
 	OrderService orderService = OrderServiceImpl.service;
-
+	
 	@Before(Tx.class)
 	public void order() throws PaymentException {
 		String orderId = getPara("orderId");
 		Order orderById = orderService.getOrderById(orderId);
 		if (!OrderStatus.WAITING_PAY.getCode().equals(orderById.getStatus())) {
 			renderJson(AjaxJson.failure().setMsg("该订单不支持支付操作"));
+			return;
+		}
+		if (orderById.getTimeExpire().before(new Date())) {
+			orderById.setStatus(OrderStatus.CANCEL.getCode()).update();
+			renderJson(AjaxJson.failure().setMsg("您已超过半小时未支付，请重新下单"));
 			return;
 		}
 		WxaOrder order = new WxaOrder(WxaConfigKit.getWxaConfig().getAppId(), PropKit.get("mch_id"), PropKit.get("signKey"));

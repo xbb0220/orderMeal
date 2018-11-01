@@ -27,7 +27,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderSer
 		List<Object> params = new ArrayList<>();
 		SqlKit.appendEqualCondition(false, sql, order, params, "guestId");
 		sql.append(" group by order_item.orderId ");
-		sql.append(" order by order_item.createTime ");
+		sql.append(" order by order_item.createTime desc ");
 		return super.paginate(pageInfo.getPage(), pageInfo.getPageSize(), sql.toString(), params.toArray());
 	}
 	

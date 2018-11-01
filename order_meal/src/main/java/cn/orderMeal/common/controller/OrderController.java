@@ -110,7 +110,7 @@ public class OrderController extends BaseController{
 	public void getOrderById(){
 		Order order = orderService.getOrderById(getPara("id"));
 		if (null == order){
-			renderJson(AjaxJson.failure().setMsg("找不到该订单"));
+			renderJson(AjaxJson.failure().setMsg("找不到该订单信息"));
 			return;
 		} else{
 			renderJson(AjaxJson.success().setData(order));

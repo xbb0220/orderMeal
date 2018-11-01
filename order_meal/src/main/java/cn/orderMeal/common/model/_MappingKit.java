@@ -16,7 +16,6 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 public class _MappingKit {
 	
 	public static void mapping(ActiveRecordPlugin arp) {
-		arp.addMapping("department", "id", Department.class);
 		arp.addMapping("dict", "id", Dict.class);
 		arp.addMapping("dict_type", "id", DictType.class);
 		arp.addMapping("dinning_table", "id", DinningTable.class);

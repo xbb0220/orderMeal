@@ -23,12 +23,14 @@ import cn.orderMeal.common.controller.OrderController;
 import cn.orderMeal.common.controller.OrderItemController;
 import cn.orderMeal.common.kit.session.SessionHandler;
 import cn.orderMeal.common.model._MappingKit;
+import cn.orderMeal.common.task.OrderStatusTask;
 import redis.clients.jedis.JedisPoolConfig;
 import com.jfinal.ext.interceptor.SessionInViewInterceptor;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.redis.RedisPlugin;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.activerecord.dialect.MysqlDialect;
+import com.jfinal.plugin.cron4j.Cron4jPlugin;
 import com.jfinal.render.ViewType;
 
 public class MainConfig extends JFinalConfig {
@@ -95,7 +97,14 @@ public class MainConfig extends JFinalConfig {
 		jedisPoolConfig.setMaxIdle(100);
 		jedisPoolConfig.setMaxWaitMillis(10000);
 		me.add(redisPlugin);
+		
+		
+		Cron4jPlugin cp = new Cron4jPlugin();
+		cp.addTask("* * * * *", new OrderStatusTask());
+		me.add(cp);
 	}
+	
+	
 	/**
 	 * 配置全局拦截器
 	 */
