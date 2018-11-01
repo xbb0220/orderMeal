@@ -1,0 +1,127 @@
+Table: department
+-------+------+------+-----+---------+---------
+ Field | Type | Null | Key | Default | Remarks 
+-------+------+------+-----+---------+---------
+-------+------+------+-----+---------+---------
+
+Table: dict
+------------+--------------+------+-----+---------+---------
+ Field      | Type         | Null | Key | Default | Remarks 
+------------+--------------+------+-----+---------+---------
+ id         | VARCHAR(36)  | NO   | PRI |         | 字典id    
+ name       | VARCHAR(45)  | YES  |     |         | 字典名称    
+ code       | VARCHAR(200) | YES  |     |         | 字典      
+ deleteFlag | VARCHAR(20)  | YES  |     |         | 删除标志    
+ createTime | DATETIME(19) | YES  |     |         | 创建时间    
+ updateTime | DATETIME(19) | YES  |     |         | 更新时间    
+ dictTypeId | VARCHAR(36)  | YES  |     |         | 字典类型id  
+------------+--------------+------+-----+---------+---------
+
+Table: dict_type
+------------+--------------+------+-----+---------+---------
+ Field      | Type         | Null | Key | Default | Remarks 
+------------+--------------+------+-----+---------+---------
+ id         | VARCHAR(36)  | NO   | PRI |         | 字典类型id  
+ name       | VARCHAR(45)  | YES  |     |         | 字典类型名称  
+ code       | VARCHAR(45)  | YES  |     |         | 字典类型    
+ deleteFlag | VARCHAR(10)  | YES  |     |         | 删除标志    
+ createTime | DATETIME(19) | YES  |     |         | 创建时间    
+ updateTime | DATETIME(19) | YES  |     |         | 更新时间    
+------------+--------------+------+-----+---------+---------
+
+Table: dish
+-------------+---------------+------+-----+---------+---------
+ Field       | Type          | Null | Key | Default | Remarks 
+-------------+---------------+------+-----+---------+---------
+ id          | VARCHAR(36)   | NO   | PRI |         | 菜品ID    
+ name        | VARCHAR(45)   | YES  |     |         | 菜名      
+ discription | TEXT(65535)   | YES  |     |         | 菜品介绍    
+ price       | DECIMAL(10,2) | YES  |     |         | 单价      
+ deleteFlag  | VARCHAR(10)   | YES  |     |         | 删除标志    
+ createTime  | DATETIME(19)  | YES  |     |         | 创建时间    
+ updateTime  | DATETIME(19)  | YES  |     |         | 更新时间    
+ picUrl      | TEXT(65535)   | YES  |     |         | 菜品图片    
+ dishTypeId  | VARCHAR(36)   | YES  |     |         |         
+-------------+---------------+------+-----+---------+---------
+
+Table: dish_type
+-------------+--------------+------+-----+---------+---------
+ Field       | Type         | Null | Key | Default | Remarks 
+-------------+--------------+------+-----+---------+---------
+ id          | VARCHAR(36)  | NO   | PRI |         | 菜品ID    
+ name        | VARCHAR(45)  | YES  |     |         | 菜名      
+ discription | TEXT(65535)  | YES  |     |         | 菜品介绍    
+ deleteFlag  | VARCHAR(36)  | YES  |     |         | 删除标志    
+ createTime  | DATETIME(19) | YES  |     |         | 创建时间    
+ updateTime  | DATETIME(19) | YES  |     |         | 更新时间    
+-------------+--------------+------+-----+---------+---------
+
+Table: guest
+----------------+---------------+------+-----+---------+---------
+ Field          | Type          | Null | Key | Default | Remarks 
+----------------+---------------+------+-----+---------+---------
+ id             | VARCHAR(36)   | NO   | PRI |         | 消费者id   
+ name           | VARCHAR(45)   | YES  |     |         | 客人姓名    
+ mobile         | VARCHAR(16)   | YES  |     |         | 手机号码    
+ address        | TEXT(65535)   | YES  |     |         | 地址      
+ deleteFlag     | VARCHAR(36)   | YES  |     |         | 删除标记    
+ ceateTime      | DATETIME(19)  | YES  |     |         | 创建时间    
+ isVipMember    | VARCHAR(36)   | YES  |     |         | 是否是会员   
+ openid         | VARCHAR(100)  | YES  |     |         |         
+ wechatNickName | VARCHAR(1000) | YES  |     |         |         
+ profilePic     | TEXT(65535)   | YES  |     |         |         
+----------------+---------------+------+-----+---------+---------
+
+Table: order_print
+----------------+--------------+------+-----+---------+---------
+ Field          | Type         | Null | Key | Default | Remarks 
+----------------+--------------+------+-----+---------+---------
+ id             | VARCHAR(36)  | NO   | PRI |         | 订单打印id  
+ orderPrintType | VARCHAR(36)  | YES  |     |         | 打印类型id  
+ orderId        | VARCHAR(36)  | YES  |     |         | 订单id    
+ createTime     | DATETIME(19) | YES  |     |         | 创建时间    
+----------------+--------------+------+-----+---------+---------
+
+Table: order
+---------------+--------------+------+-----+---------+---------
+ Field         | Type         | Null | Key | Default | Remarks 
+---------------+--------------+------+-----+---------+---------
+ id            | VARCHAR(36)  | NO   | PRI |         | 订单id    
+ diningTableId | VARCHAR(36)  | YES  |     |         | 台桌id    
+ deleteFlag    | VARCHAR(36)  | YES  |     |         | 删除标记    
+ createTime    | DATETIME(19) | YES  |     |         | 创建时间    
+ updateTime    | DATETIME(19) | YES  |     |         | 更新时间    
+ status        | VARCHAR(20)  | YES  |     |         | 0：未结算；1：已结算
+ remark        | TEXT(65535)  | YES  |     |         | 备注      
+ guestId       | VARCHAR(36)  | YES  |     |         | 客人id    
+ diningTabeNum | VARCHAR(45)  | YES  |     |         | 桌号      
+---------------+--------------+------+-----+---------+---------
+
+Table: order_item
+------------+---------------+------+-----+---------+---------
+ Field      | Type          | Null | Key | Default | Remarks 
+------------+---------------+------+-----+---------+---------
+ id         | VARCHAR(36)   | NO   | PRI |         | 菜品ID    
+ dishId     | VARCHAR(36)   | YES  |     |         | 菜品id    
+ price      | DECIMAL(10,2) | YES  |     |         | 菜品介绍    
+ deleteFlag | VARCHAR(36)   | YES  |     |         | 删除标志    
+ createTime | DATETIME(19)  | YES  |     |         | 创建时间    
+ updateTime | DATETIME(19)  | YES  |     |         | 更新时间    
+ dishNum    | INT(10)       | YES  |     |         | 菜份数     
+ orderId    | VARCHAR(36)   | YES  |     |         | 订单id    
+ name       | VARCHAR(45)   | YES  |     |         | 菜名      
+ picUrl     | TEXT(65535)   | YES  |     |         | 菜品图片    
+------------+---------------+------+-----+---------+---------
+
+Table: dinning_table
+---------------+-------------+------+-----+---------+---------
+ Field         | Type        | Null | Key | Default | Remarks 
+---------------+-------------+------+-----+---------+---------
+ id            | VARCHAR(36) | NO   | PRI |         | 餐桌ID    
+ acommondate   | VARCHAR(45) | YES  |     |         | 容纳人数    
+ status        | VARCHAR(36) | YES  |     |         | 0：空闲；1：可用；2：有合并子桌
+ deleteFlag    | VARCHAR(36) | YES  |     |         | 删除标记    
+ description   | TEXT(65535) | YES  |     |         | 台桌描述    
+ diningTabeNum | VARCHAR(45) | YES  |     |         |         
+---------------+-------------+------+-----+---------+---------
+
