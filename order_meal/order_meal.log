@@ -12525,3 +12525,11 @@ Caused by: com.jfinal.plugin.activerecord.ActiveRecordException: pageNumber and 
 	at com.jfinal.plugin.activerecord.Model.doPaginateByFullSql(Model.java:443)
 	at com.jfinal.plugin.activerecord.Model.doPaginate(Model.java:433)
 	... 39 more
+
+2018-11-01 14:23:12
+[ERROR]-[Thread: main]-[com.jfinal.kit.LogKit.error()]: port: 8081 already in use!
+java.lang.IllegalStateException: port: 8081 already in use!
+	at com.jfinal.server.JettyServerForIDEA.doStart(JettyServerForIDEA.java:89)
+	at com.jfinal.server.JettyServerForIDEA.start(JettyServerForIDEA.java:72)
+	at com.jfinal.core.JFinal.start(JFinal.java:174)
+	at cn.orderMeal.common.config.MainConfig.main(MainConfig.java:173)
