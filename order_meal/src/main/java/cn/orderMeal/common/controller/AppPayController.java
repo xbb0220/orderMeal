@@ -1,20 +1,21 @@
 package cn.orderMeal.common.controller;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
-import com.jfinal.ext.kit.DateKit;
+
+import com.jfinal.aop.Before;
 import com.jfinal.kit.HttpKit;
 import com.jfinal.kit.PropKit;
+import com.jfinal.plugin.activerecord.tx.Tx;
 import com.jfinal.weixin.sdk.kit.PaymentKit;
 import com.jfinal.weixin.sdk.utils.PaymentException;
 import com.jfinal.wxaapp.WxaConfigKit;
 import com.jfinal.wxaapp.api.WxaOrder;
 import com.jfinal.wxaapp.api.WxaPayApi;
-import cn.orderMeal.common.cons.SessionConst;
-import cn.orderMeal.common.kit.GenerateOrderNoKit;
-import cn.orderMeal.common.kit.session.SessionKit;
+import cn.orderMeal.common.anum.OrderStatus;
+import cn.orderMeal.common.kit.AjaxJson;
+import cn.orderMeal.common.kit.DateKit;
 import cn.orderMeal.common.model.Order;
 import cn.orderMeal.common.service.OrderService;
 import cn.orderMeal.common.service.impl.OrderServiceImpl;
@@ -22,28 +23,29 @@ import cn.orderMeal.common.service.impl.OrderServiceImpl;
 public class AppPayController extends BaseController {
 	OrderService orderService = OrderServiceImpl.service;
 
+	@Before(Tx.class)
 	public void order() throws PaymentException {
-		Calendar orderTime = Calendar.getInstance();
 		String orderId = getPara("orderId");
 		Order orderById = orderService.getOrderById(orderId);
-		orderById.setOutTradeNo(GenerateOrderNoKit.gen("R", 530L));
-		orderService.update(orderById);
+		if (!OrderStatus.WAITING_PAY.getCode().equals(orderById.getStatus())) {
+			renderJson(AjaxJson.failure().setMsg("该订单不支持支付操作"));
+			return;
+		}
 		WxaOrder order = new WxaOrder(WxaConfigKit.getWxaConfig().getAppId(), PropKit.get("mch_id"), PropKit.get("signKey"));
-		order.setOutTradeNo(orderById.getOutTradeNo());
-		order.setTotalFee(String.valueOf(orderById.getBigDecimal("totalPrice").multiply(new BigDecimal(100)).intValue()));
-		order.setTimeStart(DateKit.toStr(orderTime.getTime(), "yyyyMMddHHmmss"));
-		orderTime.add(Calendar.MINUTE, 30);
-		order.setTimeExpire(DateKit.toStr(orderTime.getTime(), "yyyyMMddHHmmss"));
-		order.setOpenId((String) SessionKit.getAttr(SessionConst.OPENID));
+		order.setTotalFee(String.valueOf(orderById.getTotalFee()));
+		order.setTimeStart(DateKit.formatDate(orderById.getTimeStart(), "yyyyMMddHHmmss"));
+		order.setTimeExpire(DateKit.formatDate(orderById.getTimeExpire(), "yyyyMMddHHmmss"));
+		order.setOpenId(orderById.getOpenId());
 		order.setNotifyUrl("notifyUrl");
 		Map<String, String> unifiedOrder = new WxaPayApi().unifiedOrder(order);
-		renderJson(unifiedOrder);
+		renderJson(AjaxJson.success().setData(unifiedOrder));
 	}
 
 	/**
 	 * 支付成功通知
+	 * @throws ParseException 
 	 */
-	public void pay_notify() {
+	public void pay_notify() throws ParseException {
 		// 支付结果通用通知文档: https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=9_7
 		String xmlMsg = HttpKit.readData(getRequest());
 		System.out.println("支付通知=" + xmlMsg);
@@ -66,7 +68,12 @@ public class AppPayController extends BaseController {
 			if (("SUCCESS").equals(result_code)) {
 				// 更新订单信息
 				System.out.println("更新订单信息");
-
+				Order order = new Order().setOutTradeNo(orderId);
+				Order dbOrder = orderService.getByEqualAttr(order, "outTradeNo");
+				dbOrder.setTimeEnd(DateKit.stringToDate(timeEnd, "yyyyMMddHHmmss"));
+				dbOrder.setStatus(OrderStatus.FINISH.getCode());
+				dbOrder.setTransId(transId);
+				orderService.update(dbOrder);
 				Map<String, String> xml = new HashMap<String, String>();
 				xml.put("return_code", "SUCCESS");
 				xml.put("return_msg", "OK");

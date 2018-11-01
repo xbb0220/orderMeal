@@ -2,14 +2,18 @@ package cn.orderMeal.common.controller;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 import com.jfinal.plugin.activerecord.Page;
 
+import cn.orderMeal.common.anum.OrderStatus;
 import cn.orderMeal.common.cons.SessionConst;
 import cn.orderMeal.common.kit.AjaxJson;
+import cn.orderMeal.common.kit.GenerateOrderNoKit;
 import cn.orderMeal.common.kit.SqlKit.PageInfo;
 import cn.orderMeal.common.kit.session.SessionKit;
 import cn.orderMeal.common.model.DinningTable;
@@ -47,6 +51,16 @@ public class OrderController extends BaseController{
 		renderJson(ov);
 	}
 	
+	private void setDinningTableInfo(OrderVo orderVo, Order order) {
+		DinningTable dinningTable = dinningTableService.findById(orderVo.getDiningTableId());
+		if (null != dinningTable){
+			order.setDiningTableId(orderVo.getDiningTableId());
+			order.setDiningTabeNum(dinningTable.getDiningTabeNum());
+		} else{
+			order.setDiningTabeNum(orderVo.getDiningTabeNum());
+		}
+	}
+	
 	/**
 	 * 
 		{
@@ -67,15 +81,15 @@ public class OrderController extends BaseController{
 		String orderStr = getPara("json");
 		OrderVo orderVo = JSON.parseObject(orderStr, OrderVo.class);
 		Order order = new Order();
-		DinningTable dinningTable = dinningTableService.findById(orderVo.getDiningTableId());
-		if (null != dinningTable){
-			order.setDiningTableId(orderVo.getDiningTableId());
-			order.setDiningTabeNum(dinningTable.getDiningTabeNum());
-		} else{
-			order.setDiningTabeNum(orderVo.getDiningTabeNum());
-		}
+		setDinningTableInfo(orderVo, order);
 		Guest guest = SessionKit.getAttr(SessionConst.GUEST_INFO);
-		order.setGuestId(guest.getId()).setStatus("order");
+		order.setGuestId(guest.getId()).setStatus(OrderStatus.WAITING_PAY.getCode());
+		order.setOutTradeNo(GenerateOrderNoKit.gen("R", 530L));
+		Calendar orderTime = Calendar.getInstance();
+		order.setTimeStart(orderTime.getTime());
+		orderTime.add(Calendar.MINUTE, 30);
+		order.setTimeExpire(orderTime.getTime());
+		order.setOpenId(guest.getOpenid());
 		orderService.save(order);
 		List<OrderItem> orderItems = orderVo.getOrderItems();
 		for (OrderItem orderItem : orderItems){
@@ -86,7 +100,10 @@ public class OrderController extends BaseController{
 			orderItem.setOrderId(order.getId());
 			orderItemService.save(orderItem);
 		}
-		renderJson(AjaxJson.success());
+		Order orderById = orderService.getOrderById(order.getId());
+		orderById.setTotalFee(orderById.getBigDecimal("totalPrice").multiply(new BigDecimal(100)).intValue());
+		orderService.update(orderById);
+		renderJson(AjaxJson.success().setData(order.getId()));
 	}
 	
 	public void getOrderById(){
