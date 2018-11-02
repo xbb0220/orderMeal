@@ -22,6 +22,9 @@ public class SessionHandler extends Handler {
 		if (StrKit.isBlank(token)){
 			token = request.getParameter("token");
 		}
+		if (StrKit.isBlank(token)) {
+			token = request.getHeader("token");
+		}
 		try {
 			SessionKit.tokenLocal.set(token);
 			SessionKit.requestLocal.set(request);

@@ -1,6 +1,10 @@
 package cn.orderMeal.common.controller;
 
+import java.util.Map;
+import java.util.UUID;
+
 import com.alibaba.fastjson.JSON;
+import com.jfinal.kit.JsonKit;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.weixin.sdk.api.ApiConfig;
 import com.jfinal.weixin.sdk.api.ApiConfigKit;
@@ -53,9 +57,10 @@ public class GuestController extends BaseController{
 	
 	public void applogin() {
 		ApiResult ar = new WxaUserApi().getSessionKey(getPara("code"));
-		System.out.println(ar.getJson());
-		String openid = "";
-		String sessionKey = "";
+		@SuppressWarnings("unchecked")
+		Map<String, String> map = JSON.parseObject(ar.getJson(), Map.class);
+		String openid = map.get("openid");
+		String sessionKey = map.get("session_key");
 		SessionKit.setAttr(SessionConst.OPENID, openid);
 		SessionKit.setAttr(SessionConst.SESSION_KEY, sessionKey);
 		Guest guest = getGuestByOpenId(openid);
@@ -67,6 +72,10 @@ public class GuestController extends BaseController{
 			SessionKit.setAttr(SessionConst.GUEST_INFO, guest);
 		}
 		renderJson(AjaxJson.success().setData(SessionKit.tokenLocal.get()));
+	}
+	
+	public static void main(String args[]) {
+		System.out.println(JsonKit.toJson(AjaxJson.success().setData(UUID.randomUUID().toString())));
 	}
 	
 	/**
