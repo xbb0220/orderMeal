@@ -73,6 +73,8 @@ public class WxMaConfiguration {
     };
 
     private WxMaProperties properties;
+    
+    
 
     private static Map<String, WxMaMessageRouter> routers = Maps.newHashMap();
     private static Map<String, WxMaService> maServices = Maps.newHashMap();

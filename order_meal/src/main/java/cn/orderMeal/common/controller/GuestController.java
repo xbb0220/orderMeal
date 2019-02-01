@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 import com.alibaba.fastjson.JSON;
 import com.jfinal.kit.JsonKit;
+import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.Record;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
@@ -43,7 +44,7 @@ public class GuestController extends BaseController{
 //	}
 	
 	public void applogin() throws WxErrorException {
-		WxMaService maService = WxMaConfiguration.getMaService(getPara("appid"));
+		WxMaService maService = WxMaConfiguration.getMaService(getPara("appid", PropKit.get("appId")));
 		WxMaJscode2SessionResult sessionInfo = maService.getUserService().getSessionInfo("code");
 		SessionKit.setAttr(SessionConst.OPENID, sessionInfo.getOpenid());
 		SessionKit.setAttr(SessionConst.SESSION_KEY, sessionInfo.getSessionKey());
