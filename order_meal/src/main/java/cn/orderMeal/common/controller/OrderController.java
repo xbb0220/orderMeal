@@ -9,6 +9,8 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSON;
 import com.jfinal.plugin.activerecord.Page;
+import com.jfinal.plugin.activerecord.Record;
+import com.jfinal.plugin.redis.Redis;
 
 import cn.orderMeal.common.anum.OrderStatus;
 import cn.orderMeal.common.cons.SessionConst;
@@ -37,28 +39,14 @@ public class OrderController extends BaseController{
 	DinningTableService dinningTableService = DinningTableServiceImpl.service;
 	OrderService orderService = OrderServiceImpl.service;
 	OrderItemService orderItemService = OrderItemServiceImpl.service;
-		
-	public void show(){
-		List<OrderItem> orderItems = new ArrayList<>();
-		new OrderItem().setDishId("1").setDishNum(6);
-		orderItems.add(new OrderItem().setDishId("1").setDishNum(5));
-		orderItems.add(new OrderItem().setDishId("1").setDishNum(6));
-		
-		OrderVo ov = new OrderVo();
-		ov.setDiningTableId("1");
-		ov.setDiningTabeNum("100");
-		ov.setOrderItems(orderItems);
-		renderJson(ov);
-	}
-	
 	
 	private void setDinningTableInfo(OrderVo orderVo, Order order) {
 		DinningTable dinningTable = dinningTableService.findById(orderVo.getDiningTableId());
 		if (null != dinningTable){
 			order.setDiningTableId(orderVo.getDiningTableId());
-			order.setDiningTabeNum(dinningTable.getDiningTabeNum());
+			order.setDiningTableNum(dinningTable.getDiningTableNum());
 		} else{
-			order.setDiningTabeNum(orderVo.getDiningTabeNum());
+			order.setDiningTableNum(orderVo.getDiningTableNum());
 		}
 	}
 	
@@ -67,6 +55,9 @@ public class OrderController extends BaseController{
 		{
 			"diningTabeNum": "100",
 			"diningTableId": "1",
+			"numberOfDinner": 1,
+			"dinnerTime": "2018-01-01 15:15:15",
+			"remark": "sdfds"
 			"orderItems": [{
 				"dishId": "1",
 				"dishNum": 5
@@ -79,9 +70,14 @@ public class OrderController extends BaseController{
 	 * @throws UnsupportedEncodingException 
 	 */
 	public void order() throws UnsupportedEncodingException, IOException{
-		String orderStr = getPara("json");
+		String orderStr = readPostStr();
 		OrderVo orderVo = JSON.parseObject(orderStr, OrderVo.class);
+		
 		Order order = new Order();
+		order.setRemark(orderVo.getRemark());
+		order.setPhoneNo(orderVo.getPhoneNo());
+		order.setDinnerTime(orderVo.getDinnerTime());
+		order.setNumberOfDinner(orderVo.getNumberOfDinner());
 		setDinningTableInfo(orderVo, order);
 		Guest guest = SessionKit.getAttr(SessionConst.GUEST_INFO);
 		order.setGuestId(guest.getId()).setStatus(OrderStatus.WAITING_PAY.getCode());
@@ -113,17 +109,38 @@ public class OrderController extends BaseController{
 			renderJson(AjaxJson.failure().setMsg("找不到该订单信息"));
 			return;
 		} else{
+			OrderItem oi = new OrderItem().setOrderId(order.getId());
+			List<OrderItem> orderItems = orderItemService.getAllByEqualAttr(oi, "orderId");
+			order.put("orderItems", orderItems);
 			renderJson(AjaxJson.success().setData(order));
 		}
 	}
+	
+	private static final String orderItemCacheKey = "order_item_cache";
 	
 	public void page(){
 		PageInfo pageInfo = getBean(PageInfo.class, "");
 		Guest guest = SessionKit.getAttr(SessionConst.GUEST_INFO);
 		Order order = simpleModel(Order.class);
 		order.setGuestId(guest.getId());
-		Page<Order> page = orderService.page(pageInfo, order);
+		Page<Order> page = orderService.page(pageInfo, order); 
+		for(Order or : page.getList()) {
+			List<OrderItem> orderItems = Redis.use().get(orderItemCacheKey + or.getId());
+			if (null == orderItems) {
+				orderItems = orderItemService.getOrderItemByOrderId(or.getId());
+				Redis.use().setex(orderItemCacheKey + or.getId(), 200, orderItems);
+			}
+			or.put("orderItems", orderItems);
+		}
 		renderJson(page);
 	}
 	
+	public void orderStatus() {
+		List<Record> res = new ArrayList<>();
+		for (OrderStatus orderStatu : OrderStatus.values()) {
+			Record record = new Record().set("code", orderStatu.getCode()).set("des", orderStatu.getDes());
+			res.add(record);
+		}
+		renderJson(res);
+	}
 }

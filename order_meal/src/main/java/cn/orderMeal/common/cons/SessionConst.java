@@ -1,5 +1,11 @@
 package cn.orderMeal.common.cons;
 
+
+/**
+ * session常量类
+ * @author xubinbin
+ *
+ */
 public class SessionConst {
 	
 	public static final String GUEST_INFO = "guest";

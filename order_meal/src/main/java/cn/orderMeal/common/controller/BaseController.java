@@ -8,14 +8,13 @@ import java.text.ParseException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
+import com.jfinal.core.Controller;
 import com.jfinal.core.converter.TypeConverter;
 import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Table;
 import com.jfinal.plugin.activerecord.TableMapping;
-import com.jfinal.weixin.sdk.jfinal.ApiController;
 
-public abstract class BaseController extends ApiController{
+public abstract class BaseController extends Controller{
 
 	public String readPostStr() throws UnsupportedEncodingException, IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(getRequest().getInputStream(),"utf-8"));

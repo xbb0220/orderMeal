@@ -13,7 +13,7 @@ import cn.orderMeal.common.service.OrderService;
 
 public class OrderServiceImpl extends BaseServiceImpl<Order> implements OrderService {
 	public static final OrderServiceImpl service = new OrderServiceImpl();
-
+	
 	@Override
 	public Order getOrderById(String id) {
 		String sql = Db.getSql("order.getOrderById");

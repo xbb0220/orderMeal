@@ -81,13 +81,13 @@ public abstract class BaseOrder<M extends BaseOrder<M>> extends Model<M> impleme
 		return getStr("guestId");
 	}
 
-	public M setDiningTabeNum(java.lang.String diningTabeNum) {
-		set("diningTabeNum", diningTabeNum);
+	public M setDiningTableNum(java.lang.String diningTableNum) {
+		set("diningTableNum", diningTableNum);
 		return (M)this;
 	}
 	
-	public java.lang.String getDiningTabeNum() {
-		return getStr("diningTabeNum");
+	public java.lang.String getDiningTableNum() {
+		return getStr("diningTableNum");
 	}
 
 	public M setOutTradeNo(java.lang.String outTradeNo) {
@@ -160,6 +160,33 @@ public abstract class BaseOrder<M extends BaseOrder<M>> extends Model<M> impleme
 	
 	public java.lang.Integer getFinalTotalFee() {
 		return getInt("finalTotalFee");
+	}
+
+	public M setNumberOfDinner(java.lang.Integer numberOfDinner) {
+		set("numberOfDinner", numberOfDinner);
+		return (M)this;
+	}
+	
+	public java.lang.Integer getNumberOfDinner() {
+		return getInt("numberOfDinner");
+	}
+
+	public M setDinnerTime(java.util.Date dinnerTime) {
+		set("dinnerTime", dinnerTime);
+		return (M)this;
+	}
+	
+	public java.util.Date getDinnerTime() {
+		return get("dinnerTime");
+	}
+
+	public M setPhoneNo(java.lang.String phoneNo) {
+		set("phoneNo", phoneNo);
+		return (M)this;
+	}
+	
+	public java.lang.String getPhoneNo() {
+		return getStr("phoneNo");
 	}
 
 }

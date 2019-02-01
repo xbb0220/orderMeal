@@ -54,13 +54,13 @@ public abstract class BaseDinningTable<M extends BaseDinningTable<M>> extends Mo
 		return getStr("description");
 	}
 
-	public M setDiningTabeNum(java.lang.String diningTabeNum) {
-		set("diningTabeNum", diningTabeNum);
+	public M setDiningTableNum(java.lang.String diningTableNum) {
+		set("diningTableNum", diningTableNum);
 		return (M)this;
 	}
 	
-	public java.lang.String getDiningTabeNum() {
-		return getStr("diningTabeNum");
+	public java.lang.String getDiningTableNum() {
+		return getStr("diningTableNum");
 	}
 
 }

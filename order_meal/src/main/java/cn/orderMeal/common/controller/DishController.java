@@ -25,7 +25,7 @@ public class DishController extends BaseController{
 		for (DishType dishType : dishTypes){
 			Dish queryDishModel = new Dish();
 			queryDishModel.setDishTypeId(dishType.getId());
-			dishType.put("dishs", dishService.getAllByEqualAttr(false, queryDishModel, "dishTypeId"));
+			dishType.put("dishes", dishService.getAllByEqualAttr(false, queryDishModel, "dishTypeId"));
 		}
 		renderJson(dishTypes);
 	}
