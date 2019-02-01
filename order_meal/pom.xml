@@ -441,18 +441,6 @@
 					</connectors>
 				</configuration>
 			</plugin>
-			<!--配置tomcat7:run 使用tomcat启动 -->
-			<plugin>
-				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>2.2</version>
-				<configuration>
-					<port>80</port>
-					<path>/${project.artifactId}</path>
-					<uriEncoding>${project.build.sourceEncoding}</uriEncoding>
-				</configuration>
-			</plugin>
-
 		</plugins>
 	</build>
 </project>

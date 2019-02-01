@@ -45,7 +45,7 @@ public class GuestController extends BaseController{
 	
 	public void applogin() throws WxErrorException {
 		WxMaService maService = WxMaConfiguration.getMaService(getPara("appid", PropKit.get("appId")));
-		WxMaJscode2SessionResult sessionInfo = maService.getUserService().getSessionInfo("code");
+		WxMaJscode2SessionResult sessionInfo = maService.getUserService().getSessionInfo(getPara("code"));
 		SessionKit.setAttr(SessionConst.OPENID, sessionInfo.getOpenid());
 		SessionKit.setAttr(SessionConst.SESSION_KEY, sessionInfo.getSessionKey());
 		Guest guest = getGuestByOpenId(sessionInfo.getOpenid());
