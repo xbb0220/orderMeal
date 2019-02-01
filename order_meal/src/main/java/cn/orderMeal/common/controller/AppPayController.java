@@ -80,6 +80,7 @@ public class AppPayController extends BaseController {
 	 */
 	@Before(Tx.class)
 	public void order() throws PaymentException, WxPayException {
+		//Map<String, String> unifiedOrder = new WxaPayApi().unifiedOrder(order);
 		String orderId = getPara("orderId");
 		Order orderById = orderService.getOrderById(orderId);
 		if (!OrderStatus.WAITING_PAY.getCode().equals(orderById.getStatus())) {
@@ -107,6 +108,7 @@ public class AppPayController extends BaseController {
 		request.setOutTradeNo(orderById.getOutTradeNo());
 		request.setTradeType(TradeType.JSAPI);
 		WxPayMpOrderResult unifiedOrder = WxPayConfiguration.wxPayService.createOrder(request);
+		System.out.println(JsonKit.toJson(unifiedOrder));
 		renderJson(AjaxJson.success().setData(unifiedOrder));
 	}
 	

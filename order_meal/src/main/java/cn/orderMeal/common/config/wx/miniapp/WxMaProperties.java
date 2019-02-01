@@ -2,9 +2,12 @@ package cn.orderMeal.common.config.wx.miniapp;
 
 import java.util.List;
 
+import lombok.Data;
+
 /**
  * @author <a href="https://github.com/binarywang">Binary Wang</a>
  */
+@Data
 public class WxMaProperties {
 
 	private List<Config> configs;
