@@ -22,7 +22,6 @@ import com.jfinal.template.Engine;
 import com.jfinal.template.source.ClassPathSourceFactory;
 import com.jfinal.wxaapp.WxaConfig;
 import com.jfinal.wxaapp.WxaConfigKit;
-
 import cn.orderMeal.common.config.wx.miniapp.WxMaConfiguration;
 import cn.orderMeal.common.config.wx.miniapp.WxMaProperties;
 import cn.orderMeal.common.config.wx.miniapp.WxMaProperties.Config;
@@ -34,7 +33,7 @@ import cn.orderMeal.common.controller.DishTypeController;
 import cn.orderMeal.common.controller.GuestController;
 import cn.orderMeal.common.controller.OrderController;
 import cn.orderMeal.common.controller.OrderItemController;
-import cn.orderMeal.common.kit.session.SessionHandler;
+import cn.orderMeal.common.kit.session.CorsHandler;
 import cn.orderMeal.common.model._MappingKit;
 import cn.orderMeal.common.task.OrderStatusTask;
 import redis.clients.jedis.JedisPoolConfig;
@@ -129,7 +128,7 @@ public class MainConfig extends JFinalConfig {
 	 */
 	@Override
 	public void configHandler(Handlers me) {
-		me.add(new SessionHandler());
+		me.add(new CorsHandler());
 	}
 	
 	/**

@@ -17,7 +17,6 @@ import cn.orderMeal.common.cons.SessionConst;
 import cn.orderMeal.common.kit.AjaxJson;
 import cn.orderMeal.common.kit.GenerateOrderNoKit;
 import cn.orderMeal.common.kit.SqlKit.PageInfo;
-import cn.orderMeal.common.kit.session.SessionKit;
 import cn.orderMeal.common.model.DinningTable;
 import cn.orderMeal.common.model.Dish;
 import cn.orderMeal.common.model.Guest;
@@ -79,7 +78,7 @@ public class OrderController extends BaseController{
 		order.setDinnerTime(orderVo.getDinnerTime());
 		order.setNumberOfDinner(orderVo.getNumberOfDinner());
 		setDinningTableInfo(orderVo, order);
-		Guest guest = SessionKit.getAttr(SessionConst.GUEST_INFO);
+		Guest guest = getSessionAttr(SessionConst.GUEST_INFO);
 		order.setGuestId(guest.getId()).setStatus(OrderStatus.WAITING_PAY.getCode());
 		order.setOutTradeNo(GenerateOrderNoKit.gen("R", 530L));
 		Calendar orderTime = Calendar.getInstance();
@@ -120,7 +119,7 @@ public class OrderController extends BaseController{
 	
 	public void page(){
 		PageInfo pageInfo = getBean(PageInfo.class, "");
-		Guest guest = SessionKit.getAttr(SessionConst.GUEST_INFO);
+		Guest guest = getSessionAttr(SessionConst.GUEST_INFO);
 		Order order = simpleModel(Order.class);
 		order.setGuestId(guest.getId());
 		Page<Order> page = orderService.page(pageInfo, order); 
