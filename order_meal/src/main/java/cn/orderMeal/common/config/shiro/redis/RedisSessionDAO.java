@@ -12,10 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.redis.Redis;
 
-/**
- * @author bootdo 1992lcg@163.com
- * @version V1.0
- */
+
 public class RedisSessionDAO extends EnterpriseCacheSessionDAO {
 	
     private static Logger logger = LoggerFactory.getLogger(RedisSessionDAO.class);

@@ -12,8 +12,6 @@ public class DishTypeController extends BaseController{
 	
 	
 	public void getDishType(){
-		setSessionAttr("a", "a");
-		getSession().setMaxInactiveInterval(20);
 		List<DishType> all = dishTypeService.getAll();
 		renderJson(all);
 	}
