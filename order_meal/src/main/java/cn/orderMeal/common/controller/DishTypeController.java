@@ -12,7 +12,9 @@ public class DishTypeController extends BaseController{
 	
 	
 	public void getDishType(){
-		List<DishType> all = dishTypeService.getAll();
+		DishType queryDishType = new DishType();
+		queryDishType.setDeleteFlag("n");
+		List<DishType> all = dishTypeService.getAllByEqualAttr(false, queryDishType, "deleteFlag");
 		renderJson(all);
 	}
 	

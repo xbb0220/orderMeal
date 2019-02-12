@@ -16,16 +16,21 @@ public class DishController extends BaseController{
 	
 	public void getDish(){
 		Dish queryModel = simpleModel(Dish.class);
-		List<Dish> all = dishService.getAllByEqualAttr(false, queryModel, "dishTypeId");
+		queryModel.setDeleteFlag("n");
+		List<Dish> all = dishService.getAllByEqualAttr(false, queryModel, "dishTypeId", "deleteFlag");
 		renderJson(all);
 	}
 	
 	public void getAllDish(){
-		List<DishType> dishTypes = dishTypeService.getAll();
+		DishType queryDishType = new DishType();
+		queryDishType.setDeleteFlag("n");
+		List<DishType> dishTypes = dishTypeService.getAllByEqualAttr(false, queryDishType, "deleteFlag");
+		
 		for (DishType dishType : dishTypes){
 			Dish queryDishModel = new Dish();
 			queryDishModel.setDishTypeId(dishType.getId());
-			dishType.put("dishes", dishService.getAllByEqualAttr(false, queryDishModel, "dishTypeId"));
+			queryDishModel.setDeleteFlag("n");
+			dishType.put("dishes", dishService.getAllByEqualAttr(false, queryDishModel, "dishTypeId", "deleteFlag"));
 		}
 		renderJson(dishTypes);
 	}

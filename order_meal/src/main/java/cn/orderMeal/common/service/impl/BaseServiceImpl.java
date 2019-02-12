@@ -49,9 +49,13 @@ public class BaseServiceImpl<T extends Model<T>> implements BaseService<T>{
 		if (primaryKeys.length == 1) {
 			entity.set("id", UUID.randomUUID().toString());
 		}
+		
 		Set<String> columns = TableMapping.me().getTable(clazz).getColumnTypeMap().keySet();
 		if (columns.contains("createTime") && null == entity.get("createTime")) {
 			entity.set("createTime", new Date());
+		}
+		if (columns.contains("deleteFlag")) {
+			entity.set("deleteFlag", "n");
 		}
 		return entity.save();
 	}
