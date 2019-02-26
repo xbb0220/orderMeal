@@ -33,6 +33,7 @@ import cn.orderMeal.common.controller.DishTypeController;
 import cn.orderMeal.common.controller.GuestController;
 import cn.orderMeal.common.controller.OrderController;
 import cn.orderMeal.common.controller.OrderItemController;
+import cn.orderMeal.common.controller.QrcodeController;
 import cn.orderMeal.common.kit.session.CorsHandler;
 import cn.orderMeal.common.model._MappingKit;
 import cn.orderMeal.common.task.OrderStatusTask;
@@ -76,6 +77,7 @@ public class MainConfig extends JFinalConfig {
 		me.add("/order", OrderController.class);
 		me.add("/orderItem", OrderItemController.class);
 		me.add("/appPay", AppPayController.class);
+		me.add("/qrcode", QrcodeController.class);
 	}
 	/**
 	 * 配置JFinal插件
