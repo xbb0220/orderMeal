@@ -55,8 +55,8 @@ public class QrcodeController extends BaseController{
 			File createQrcode = qrcodeService.createWxaCodeUnlimit(scene+table, page);
 			FileUtils.copyFile(createQrcode, new File(dir + "/" + table + ".jpg"));
 		}
-		new CompressedFileKit().compressedFile(dir, dir);
-		renderFile(new File(dir + "/" + zipFileName + ".zip"));
+		new CompressedFileKit().compressedFile(dir, PathKit.getWebRootPath());
+		renderFile(new File(PathKit.getWebRootPath() + "/" + zipFileName + ".zip"));
 	}
 	
 	
