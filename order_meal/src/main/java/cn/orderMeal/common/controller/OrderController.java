@@ -39,6 +39,11 @@ public class OrderController extends BaseController{
 	OrderService orderService = OrderServiceImpl.service;
 	OrderItemService orderItemService = OrderItemServiceImpl.service;
 	
+	/**
+	 * 设置桌号信息到订单中
+	 * @param orderVo   前端传过来的订单信息
+	 * @param order		用于下单的订单对象
+	 */
 	private void setDinningTableInfo(OrderVo orderVo, Order order) {
 		DinningTable dinningTable = dinningTableService.findById(orderVo.getDiningTableId());
 		if (null != dinningTable){
@@ -52,14 +57,14 @@ public class OrderController extends BaseController{
 	/**
 	 * 
 		{
-			"diningTabeNum": "100",
-			"diningTableId": "1",
-			"numberOfDinner": 1,
-			"dinnerTime": "2018-01-01 15:15:15",
-			"remark": "sdfds"
-			"orderItems": [{
-				"dishId": "1",
-				"dishNum": 5
+			"diningTabeNum": "100",  桌号
+			"diningTableId": "1",    桌子id
+			"numberOfDinner": 1,		 就餐人数
+			"dinnerTime": "2018-01-01 15:15:15",  就餐时间
+			"remark": "sdfds"		 订单备注
+			"orderItems": [{			 菜品项
+				"dishId": "1",		 菜主键
+				"dishNum": 5			 菜数量
 			}, {
 				"dishId": "1",
 				"dishNum": 6
@@ -73,27 +78,29 @@ public class OrderController extends BaseController{
 		OrderVo orderVo = JSON.parseObject(orderStr, OrderVo.class);
 		
 		Order order = new Order();
-		order.setRemark(orderVo.getRemark());
-		order.setPhoneNo(orderVo.getPhoneNo());
-		order.setDinnerTime(orderVo.getDinnerTime());
-		order.setNumberOfDinner(orderVo.getNumberOfDinner());
+		order.setRemark(orderVo.getRemark());//下单备注
+		order.setPhoneNo(orderVo.getPhoneNo());//联系人电话号码
+		order.setDinnerTime(orderVo.getDinnerTime());//就餐时间
+		order.setNumberOfDinner(orderVo.getNumberOfDinner());//就餐人数
 		setDinningTableInfo(orderVo, order);
 		Guest guest = getSessionAttr(SessionConst.GUEST_INFO);
-		order.setGuestId(guest.getId()).setStatus(OrderStatus.WAITING_PAY.getCode());
-		order.setOutTradeNo(GenerateOrderNoKit.gen("R", 530L));
+		order.setGuestId(guest.getId()).setStatus(OrderStatus.WAITING_PAY.getCode());//订单和当前登录用户关联，并设置订单状态为待付款
+		order.setOutTradeNo(GenerateOrderNoKit.gen("R", 530L));//生成订单号
+		
 		Calendar orderTime = Calendar.getInstance();
 		order.setTimeStart(orderTime.getTime());
 		orderTime.add(Calendar.MINUTE, 30);
-		order.setTimeExpire(orderTime.getTime());
-		order.setOpenId(guest.getOpenid());
+		order.setTimeExpire(orderTime.getTime());//订单失效时间，30分钟后未付款变成取消订单
+		
+		order.setOpenId(guest.getOpenid());//订单付款人员openId，高用付款接口时要用
 		orderService.save(order);
-		List<OrderItem> orderItems = orderVo.getOrderItems();
+		List<OrderItem> orderItems = orderVo.getOrderItems();//获取客户点菜列表
 		for (OrderItem orderItem : orderItems){
 			Dish dish = dishService.findById(orderItem.getDishId());
 			orderItem.setPrice(dish.getPrice());
 			orderItem.setPicUrl(dish.getPicUrl());
 			orderItem.setName(dish.getName());
-			orderItem.setOrderId(order.getId());
+			orderItem.setOrderId(order.getId());//关联到订单
 			orderItemService.save(orderItem);
 		}
 		Order orderById = orderService.getOrderById(order.getId());
