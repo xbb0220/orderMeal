@@ -44,8 +44,7 @@ public class QrcodeController extends BaseController{
 	public void generateTablesQrCode() throws Exception {
 		String page = PropKit.get("page.index");
 		String scene = PropKit.get("page.table.para");
-		
-		String readPostStr = readPostStr();
+		String readPostStr = getPara("json");
 		List<String> tables = JSON.parseArray(readPostStr, String.class);
 		String zipFileName = UUID.randomUUID().toString();
 		String dir = PathKit.getWebRootPath() + "/" + zipFileName;
