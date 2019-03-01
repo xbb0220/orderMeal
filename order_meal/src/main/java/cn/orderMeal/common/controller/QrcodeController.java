@@ -1,6 +1,7 @@
 package cn.orderMeal.common.controller;
 
 import java.io.File;
+import java.net.URLEncoder;
 
 import com.jfinal.kit.PropKit;
 import cn.binarywang.wx.miniapp.api.WxMaQrcodeService;
@@ -21,11 +22,16 @@ public class QrcodeController extends BaseController{
 	}
 	
 	public void unlimit() throws WxErrorException {
-		String scene = getPara("scene"), page = getPara("page");
-		WxMaService maService = WxMaConfiguration.getMaService(getPara("appid", PropKit.get("appId")));
-		WxMaQrcodeService qrcodeService = maService.getQrcodeService();
-		File createQrcode = qrcodeService.createWxaCodeUnlimit(scene, page);
-		renderFile(createQrcode);
+		try {
+			String scene = getPara("scene"), page = getPara("page");
+			WxMaService maService = WxMaConfiguration.getMaService(getPara("appid", PropKit.get("appId")));
+			WxMaQrcodeService qrcodeService = maService.getQrcodeService();
+			File createQrcode = qrcodeService.createWxaCodeUnlimit(scene, page);
+			renderFile(createQrcode);
+		}
+		catch (Exception e) {
+			renderText(e.toString());
+		}
 	}
 	
 }
